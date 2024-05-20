@@ -1,28 +1,15 @@
 mod contract_reader;
 
-use contract_reader::contract_structure::Contract;
+use contract_reader::{contract_structure::Contract, reader};
 use serde_json::Result;
 
 fn main() -> Result<()> {
-    let example = r#"
-        {
-            "base_url": "http://localhost:8000/",
-            "timeout": 10000,
-            "methods": [
-                {
-                    "method_type": "GET",
-                    "body": { "name": "walefy" },
-                    "expect": {
-                        "status": 500,
-                        "body": "feito"
-                    }
-                }
-            ]
-        }
-    "#;
+    let file_path = "./examples/simple.json";
 
-    let contract_example: Contract = serde_json::from_str(&example)?;
+    let content = reader(file_path.to_string());
+    let contract: Contract = serde_json::from_str(&content)?;
 
-    println!("{:#?}", contract_example.methods[0].body);
+    println!("{:#?}", contract.methods[0].expect);
+
     Ok(())
 }

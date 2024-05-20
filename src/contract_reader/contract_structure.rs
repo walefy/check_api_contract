@@ -8,6 +8,7 @@ pub enum BodyType {
     String(String),
     HashMap(HashMap<String, BodyType>),
     Array(Vec<BodyType>),
+    Null,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -17,6 +18,7 @@ pub struct Expect {
 }
 
 #[derive(Deserialize, Serialize, Debug)]
+#[serde(rename_all = "camelCase")]
 pub struct Method {
     pub method_type: String,
     pub body: BodyType,
@@ -24,6 +26,7 @@ pub struct Method {
 }
 
 #[derive(Deserialize, Serialize, Debug)]
+#[serde(rename_all = "camelCase")]
 pub struct Contract {
     pub base_url: String,
     pub timeout: u16,
