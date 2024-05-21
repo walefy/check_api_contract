@@ -5,12 +5,13 @@ use reqwest::{
     header::{HeaderMap, HeaderName, HeaderValue},
 };
 
-use crate::contract_reader::contract_structure::BodyType;
+use crate::contract_reader::contract_structure::{BodyType, HttpMethod};
 
 use super::response::Response;
 
-pub fn get(
-    url: &String,
+pub fn build_request(
+    method: &HttpMethod,
+    url: &str,
     headers: &HashMap<String, String>,
     body: &BodyType,
     client: &Client,
@@ -25,12 +26,12 @@ pub fn get(
         );
     }
 
-    let res = client
-        .get(url)
-        .body(body_str)
-        .headers(l_headers)
-        .send()
-        .unwrap();
+    let request = match method {
+        HttpMethod::Get => client.get(url),
+        HttpMethod::Post => client.post(url),
+    };
+
+    let res = request.body(body_str).headers(l_headers).send().unwrap();
 
     Response {
         status: res.status().as_u16(),

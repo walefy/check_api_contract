@@ -5,10 +5,20 @@
     {
       "endpoint": "user",
       "methodType": "GET",
-      "body": { "name": "walefy" },
+      "headers": { "Content-Type": "application/json" },
       "expect": {
         "status": 200,
         "body": []
+      }
+    },
+    {
+      "endpoint": "user",
+      "methodType": "POST",
+      "body": { "name": "walefy", "email": "teste@teste.com", "password": "pass123" },
+      "headers": { "Content-Type": "application/json" },
+      "expect": {
+        "status": 201,
+        "body": { "id": 1, "name": "walefy", "email": "teste@teste.com", "image": null }
       }
     }
   ]

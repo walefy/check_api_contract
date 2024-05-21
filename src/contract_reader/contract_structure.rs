@@ -1,6 +1,13 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
+#[derive(Deserialize, Serialize, Debug, PartialEq, Eq, Hash)]
+#[serde(rename_all = "UPPERCASE")]
+pub enum HttpMethod {
+    Get,
+    Post,
+}
+
 #[derive(Deserialize, Serialize, Debug, PartialEq, Clone)]
 #[serde(untagged)]
 pub enum BodyType {
@@ -32,7 +39,7 @@ pub struct Expect {
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct Method {
-    pub method_type: String,
+    pub method_type: HttpMethod,
     pub endpoint: String,
     pub body: Option<BodyType>,
     pub headers: Option<HashMap<String, String>>,
