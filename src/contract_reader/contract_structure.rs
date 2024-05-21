@@ -34,8 +34,8 @@ impl BodyType {
 impl fmt::Display for BodyType {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            BodyType::Number(v) => write!(f, "{}", v.to_string()),
-            BodyType::String(v) => write!(f, "{}", v.to_string()),
+            BodyType::Number(v) => write!(f, "{}", v),
+            BodyType::String(v) => write!(f, "{}", v),
             BodyType::HashMap(v) => write!(f, "{}", serde_json::to_string_pretty(v).unwrap()),
             BodyType::Array(v) => write!(f, "{}", serde_json::to_string_pretty(v).unwrap()),
             BodyType::Null => write!(f, "null"),

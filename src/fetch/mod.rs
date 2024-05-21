@@ -3,6 +3,7 @@ mod response;
 use reqwest::blocking::Client;
 use reqwest::header::{HeaderMap, HeaderName, HeaderValue};
 use std::collections::HashMap;
+use std::process::exit;
 use std::time::Duration;
 
 use crate::contract_reader::contract_structure::{BodyType, HttpMethod};
@@ -33,12 +34,19 @@ pub fn fetch(
         HttpMethod::Post => client.post(url),
     };
 
-    let res = request
+    let res_result = request
         .body(body_str)
         .headers(l_headers)
         .timeout(Duration::from_millis(timeout.to_owned()))
-        .send()
-        .unwrap();
+        .send();
+
+    let res = match res_result {
+        Ok(v) => v,
+        Err(_) => {
+            println!("Connection error with url: {url}");
+            exit(1);
+        }
+    };
 
     Response {
         status: res.status().as_u16(),

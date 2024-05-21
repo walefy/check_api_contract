@@ -20,8 +20,8 @@ fn compare_and_print_diff<T: std::fmt::Display + PartialEq>(
     description: &str,
 ) {
     if expected != actual {
-        println!("Difference found in {}:", description);
-        println!("\nTesting url: {}", url);
+        println!("Difference found in {}:\n", description);
+        println!("Testing url: {}", url);
         println!("Testing with method: {:?}", method);
         println!("\nExpected: {}\nActual: {}", expected, actual);
         exit(1);
