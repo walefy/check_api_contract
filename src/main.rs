@@ -1,16 +1,32 @@
 mod contract_reader;
 mod fetch;
 
-use std::collections::HashMap;
+use std::{collections::HashMap, process::exit};
 
 use contract_reader::{
-    contract_structure::{Contract, Expect},
+    contract_structure::{Contract, Expect, HttpMethod},
     reader,
 };
 use fetch::fetch;
 use serde_json::Result;
 
 use crate::contract_reader::contract_structure::BodyType;
+
+fn compare_and_print_diff<T: std::fmt::Display + PartialEq>(
+    expected: &T,
+    actual: &T,
+    url: &str,
+    method: &HttpMethod,
+    description: &str,
+) {
+    if expected != actual {
+        println!("Difference found in {}:", description);
+        println!("\nTesting url: {}", url);
+        println!("Testing with method: {:?}", method);
+        println!("\nExpected: {}\nActual: {}", expected, actual);
+        exit(1);
+    }
+}
 
 fn main() -> Result<()> {
     let file_path = "./examples/simple.json";
@@ -32,10 +48,28 @@ fn main() -> Result<()> {
             None => BodyType::Null,
         };
 
-        let result = fetch(url, &method.method_type, &headers, &body, &contract.timeout);
+        let result = fetch(
+            &url,
+            &method.method_type,
+            &headers,
+            &body,
+            &contract.timeout,
+        );
 
-        assert!(expect.status == result.status);
-        assert!(expect.body == result.body);
+        compare_and_print_diff(
+            &expect.status,
+            &result.status,
+            &url,
+            &method.method_type,
+            "status",
+        );
+        compare_and_print_diff(
+            &expect.body,
+            &result.body,
+            &url,
+            &method.method_type,
+            "body",
+        );
     }
 
     Ok(())

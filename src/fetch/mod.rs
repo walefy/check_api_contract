@@ -10,7 +10,7 @@ use crate::contract_reader::contract_structure::{BodyType, HttpMethod};
 use self::response::Response;
 
 pub fn fetch(
-    url: String,
+    url: &str,
     method: &HttpMethod,
     headers: &HashMap<String, String>,
     body: &BodyType,
