@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-#[derive(Deserialize, Serialize, Debug, PartialEq)]
+#[derive(Deserialize, Serialize, Debug, PartialEq, Clone)]
 #[serde(untagged)]
 pub enum BodyType {
     Number(i32),
@@ -9,6 +9,18 @@ pub enum BodyType {
     HashMap(HashMap<String, BodyType>),
     Array(Vec<BodyType>),
     Null,
+}
+
+impl BodyType {
+    pub fn to_string(&self) -> Option<String> {
+        match self {
+            BodyType::Number(v) => Some(v.to_string()),
+            BodyType::String(v) => Some(v.to_string()),
+            BodyType::HashMap(v) => Some(serde_json::to_string(v).unwrap()),
+            BodyType::Array(v) => Some(serde_json::to_string(v).unwrap()),
+            BodyType::Null => None,
+        }
+    }
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
@@ -22,7 +34,7 @@ pub struct Expect {
 pub struct Method {
     pub method_type: String,
     pub endpoint: String,
-    pub body: BodyType,
+    pub body: Option<BodyType>,
     pub headers: Option<HashMap<String, String>>,
     pub expect: Expect,
 }

@@ -24,5 +24,5 @@ pub fn reader(path: String) -> String {
         }
     }
 
-    return content;
+    content
 }

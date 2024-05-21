@@ -1,5 +1,5 @@
 {
-  "baseUrl": "http://localhost:8000/",
+  "baseUrl": "http://localhost:8080/",
   "timeout": 10000,
   "methods": [
     {
@@ -7,8 +7,8 @@
       "methodType": "GET",
       "body": { "name": "walefy" },
       "expect": {
-        "status": 500,
-        "body": "feito"
+        "status": 200,
+        "body": []
       }
     }
   ]

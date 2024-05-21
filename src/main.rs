@@ -1,10 +1,16 @@
 mod contract_reader;
+mod fetch;
+
+use std::collections::HashMap;
 
 use contract_reader::{
-    contract_structure::{BodyType, Contract, Expect},
+    contract_structure::{Contract, Expect},
     reader,
 };
+use fetch::fetch;
 use serde_json::Result;
+
+use crate::contract_reader::contract_structure::BodyType;
 
 fn main() -> Result<()> {
     let file_path = "./examples/simple.json";
@@ -12,14 +18,24 @@ fn main() -> Result<()> {
     let content = reader(file_path.to_string());
     let contract: Contract = serde_json::from_str(&content)?;
 
-    let example_result_status: u16 = 500;
-    let example_result_body = BodyType::String("feito".to_string());
-
     for method in contract.methods.iter() {
         let expect: &Expect = &method.expect;
 
-        assert!(expect.status == example_result_status);
-        assert!(expect.body == example_result_body);
+        let url = [contract.base_url.clone(), method.endpoint.clone()].join("");
+        let headers: HashMap<String, String> = match &method.headers {
+            Some(v) => v.clone(),
+            None => HashMap::new(),
+        };
+
+        let body: BodyType = match &method.body {
+            Some(v) => v.clone(),
+            None => BodyType::Null,
+        };
+
+        let result = fetch(url, &method.method_type.to_lowercase(), &headers, &body);
+
+        assert!(expect.status == result.status);
+        assert!(expect.body == result.body);
     }
 
     Ok(())
