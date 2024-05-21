@@ -8,7 +8,7 @@ A ideia é que seja como um teste de integração só que vai funcionar independ
 
 ## Stacks
 
-- Rust -> Decidi utilizar rust porquê é uma linguagem compilada, veloz e que me diverte muito ^-^.
+- Rust -> Decidi utilizar rust porque é uma linguagem compilada, veloz e que me diverte muito ^-^.
 - Reqwest -> O reqwest é uma biblioteca para fazer requisições com rust, decidi utiliza-la para não implementar o conceito de async-await pois elá dá suporte a requisições bloqueantes com o modulo blocking.
 - Serde -> O serde e serde_json está sendo utilizado para serializar e desserializar o arquivo de contrato, o serde foi escolhido pela sua utilização que é simples porem completa, além de suporte a vários tipos de arquivo.
 
