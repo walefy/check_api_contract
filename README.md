@@ -1,8 +1,8 @@
 # Check Api Contract
 
-## Proposito
+## Propósito
 
-O proposito do check_api_contract é escrever um contrato e verificar se sua api segue aquele contrato. Atualmente os contratos são escritos em json mas penso em adicionar suporte a outros formatos de arquivos.
+O propósito do check_api_contract é escrever um contrato e verificar se sua api segue aquele contrato. Atualmente os contratos são escritos em json mas penso em adicionar suporte a outros formatos de arquivos.
 
 A ideia é que seja como um teste de integração só que vai funcionar independente da linguagem que você estiver utilizando.
 
