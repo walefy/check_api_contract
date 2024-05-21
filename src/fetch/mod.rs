@@ -32,6 +32,10 @@ pub fn fetch(
     let request = match method {
         HttpMethod::Get => client.get(url),
         HttpMethod::Post => client.post(url),
+        HttpMethod::Patch => client.patch(url),
+        HttpMethod::Delete => client.delete(url),
+        HttpMethod::Put => client.put(url),
+        HttpMethod::Head => client.head(url),
     };
 
     let res_result = request

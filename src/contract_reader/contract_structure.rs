@@ -7,6 +7,10 @@ use std::collections::HashMap;
 pub enum HttpMethod {
     Get,
     Post,
+    Patch,
+    Delete,
+    Put,
+    Head,
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq, Clone)]
