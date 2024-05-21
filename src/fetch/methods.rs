@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, time::Duration};
 
 use reqwest::{
     blocking::Client,
@@ -14,6 +14,7 @@ pub fn build_request(
     url: &str,
     headers: &HashMap<String, String>,
     body: &BodyType,
+    timeout: &u64,
     client: &Client,
 ) -> Response {
     let body_str = body.to_string().unwrap_or("null".to_string());
@@ -31,7 +32,12 @@ pub fn build_request(
         HttpMethod::Post => client.post(url),
     };
 
-    let res = request.body(body_str).headers(l_headers).send().unwrap();
+    let res = request
+        .body(body_str)
+        .headers(l_headers)
+        .timeout(Duration::from_millis(timeout.to_owned()))
+        .send()
+        .unwrap();
 
     Response {
         status: res.status().as_u16(),

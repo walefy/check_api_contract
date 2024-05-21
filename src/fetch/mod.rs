@@ -14,7 +14,8 @@ pub fn fetch(
     method: &HttpMethod,
     headers: &HashMap<String, String>,
     body: &BodyType,
+    timeout: &u64,
 ) -> Response {
     let client = Client::new();
-    build_request(method, &url, headers, body, &client)
+    build_request(method, &url, headers, body, timeout, &client)
 }

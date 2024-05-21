@@ -32,7 +32,7 @@ fn main() -> Result<()> {
             None => BodyType::Null,
         };
 
-        let result = fetch(url, &method.method_type, &headers, &body);
+        let result = fetch(url, &method.method_type, &headers, &body, &contract.timeout);
 
         assert!(expect.status == result.status);
         assert!(expect.body == result.body);

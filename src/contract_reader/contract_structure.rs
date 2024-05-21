@@ -50,6 +50,6 @@ pub struct Method {
 #[serde(rename_all = "camelCase")]
 pub struct Contract {
     pub base_url: String,
-    pub timeout: u16,
+    pub timeout: u64,
     pub methods: Vec<Method>,
 }
