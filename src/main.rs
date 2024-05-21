@@ -20,8 +20,8 @@ fn main() -> Result<()> {
 
     for method in contract.methods.iter() {
         let expect: &Expect = &method.expect;
-
         let url = [contract.base_url.clone(), method.endpoint.clone()].join("");
+
         let headers: HashMap<String, String> = match &method.headers {
             Some(v) => v.clone(),
             None => HashMap::new(),
