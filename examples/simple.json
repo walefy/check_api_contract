@@ -1,9 +1,23 @@
 {
-  "baseUrl": "http://localhost:8080/",
+  "baseUrl": "http://localhost:8080",
   "timeout": 1000,
+  "callbacks": [
+    {
+      "name": "deleteUserOne",
+      "description": "Delete user",
+      "endpoint": "/user/1",
+      "methodType": "DELETE",
+      "headers": { "Content-Type": "application/json", "Authorization": "Bearer teste" },
+      "expect": {
+        "status": 204,
+        "body": null
+      }
+    }
+  ],
   "methods": [
     {
-      "endpoint": "user",
+      "description": "Get all users",
+      "endpoint": "/user",
       "methodType": "GET",
       "headers": { "Content-Type": "application/json" },
       "expect": {
@@ -12,14 +26,16 @@
       }
     },
     {
-      "endpoint": "user",
+      "description": "Create user",
+      "endpoint": "/user",
       "methodType": "POST",
       "body": { "name": "walefy", "email": "teste@teste.com", "password": "pass123" },
       "headers": { "Content-Type": "application/json" },
       "expect": {
         "status": 201,
         "body": { "id": 1, "name": "walefy", "email": "teste@teste.com", "image": null }
-      }
+      },
+      "afterEach": ["deleteUserOne"]
     }
   ]
 }

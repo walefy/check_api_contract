@@ -54,19 +54,30 @@ pub struct Expect {
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
+pub struct Callback {
+    name: String,
+    #[serde(flatten)]
+    method: Method,
+}
+
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct Method {
     pub method_type: HttpMethod,
+    pub description: Option<String>,
     pub endpoint: String,
     pub body: Option<BodyType>,
     pub headers: Option<HashMap<String, String>>,
     pub expect: Expect,
+    pub before_each: Option<Vec<String>>,
+    pub after_each: Option<Vec<String>>,
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct Contract {
     pub base_url: String,
+    pub callbacks: Option<Vec<Callback>>,
     pub timeout: u64,
     pub methods: Vec<Method>,
 }

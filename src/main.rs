@@ -4,7 +4,7 @@ mod fetch;
 use std::{collections::HashMap, process::exit};
 
 use contract_reader::{
-    contract_structure::{Contract, Expect, HttpMethod},
+    contract_structure::{Contract, Expect, HttpMethod, Method},
     reader,
 };
 use fetch::fetch;
@@ -28,6 +28,51 @@ fn compare_and_print_diff<T: std::fmt::Display + PartialEq>(
     }
 }
 
+fn extract_field<T: Clone>(field: &Option<T>, default: T) -> T {
+    match field {
+        Some(v) => v.clone(),
+        None => default,
+    }
+}
+
+fn eval_method(method: &Method, contract: &Contract) {
+    println!(
+        "Running: {}",
+        method
+            .description
+            .to_owned()
+            .unwrap_or("method without description".to_string())
+    );
+
+    let expect: &Expect = &method.expect;
+    let url = [contract.base_url.clone(), method.endpoint.clone()].join("");
+    let headers: HashMap<String, String> = extract_field(&method.headers, HashMap::new());
+    let body: BodyType = extract_field(&method.body, BodyType::Null);
+
+    let result = fetch(
+        &url,
+        &method.method_type,
+        &headers,
+        &body,
+        &contract.timeout,
+    );
+
+    compare_and_print_diff(
+        &expect.status,
+        &result.status,
+        &url,
+        &method.method_type,
+        "status",
+    );
+    compare_and_print_diff(
+        &expect.body,
+        &result.body,
+        &url,
+        &method.method_type,
+        "body",
+    );
+}
+
 fn main() -> Result<()> {
     let file_path = "./examples/simple.json";
 
@@ -35,41 +80,7 @@ fn main() -> Result<()> {
     let contract: Contract = serde_json::from_str(&content)?;
 
     for method in contract.methods.iter() {
-        let expect: &Expect = &method.expect;
-        let url = [contract.base_url.clone(), method.endpoint.clone()].join("");
-
-        let headers: HashMap<String, String> = match &method.headers {
-            Some(v) => v.clone(),
-            None => HashMap::new(),
-        };
-
-        let body: BodyType = match &method.body {
-            Some(v) => v.clone(),
-            None => BodyType::Null,
-        };
-
-        let result = fetch(
-            &url,
-            &method.method_type,
-            &headers,
-            &body,
-            &contract.timeout,
-        );
-
-        compare_and_print_diff(
-            &expect.status,
-            &result.status,
-            &url,
-            &method.method_type,
-            "status",
-        );
-        compare_and_print_diff(
-            &expect.body,
-            &result.body,
-            &url,
-            &method.method_type,
-            "body",
-        );
+        eval_method(method, &contract);
     }
 
     Ok(())
