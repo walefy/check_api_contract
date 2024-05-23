@@ -28,13 +28,6 @@ fn compare_and_print_diff<T: std::fmt::Display + PartialEq>(
     }
 }
 
-fn extract_field<T: Clone>(field: &Option<T>, default: T) -> T {
-    match field {
-        Some(v) => v.clone(),
-        None => default,
-    }
-}
-
 fn eval_method(method: &Method, contract: &Contract) {
     println!(
         "Running: {}",
@@ -46,8 +39,8 @@ fn eval_method(method: &Method, contract: &Contract) {
 
     let expect: &Expect = &method.expect;
     let url = [contract.base_url.clone(), method.endpoint.clone()].join("");
-    let headers: HashMap<String, String> = extract_field(&method.headers, HashMap::new());
-    let body: BodyType = extract_field(&method.body, BodyType::Null);
+    let headers: HashMap<String, String> = method.headers.clone().unwrap_or(HashMap::new());
+    let body: BodyType = method.body.clone().unwrap_or(BodyType::Null);
 
     let result = fetch(
         &url,
